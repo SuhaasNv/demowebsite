@@ -17,17 +17,17 @@ export default function Pricing() {
         <section className="pricing-section">
           <div className="pricing-tier">
             <h2>Starter</h2>
-            <p className="price">$69</p>
+            <p className="price">$59</p>
             <p className="period">/month</p>
           </div>
           <div className="pricing-tier">
             <h2>Pro</h2>
-            <p className="price">$119</p>
+            <p className="price">$99</p>
             <p className="period">/month</p>
           </div>
           <div className="pricing-tier">
             <h2>Enterprise</h2>
-            <p className="price">$219</p>
+            <p className="price">$159</p>
             <p className="period">/month</p>
           </div>
         </section>

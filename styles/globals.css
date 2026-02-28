@@ -1,0 +1,76 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #0f0f0f;
+  color: #e5e5e5;
+  min-height: 100vh;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: #fff;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #a3a3a3;
+  margin: 0 0 3rem;
+}
+
+.pricing-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .pricing-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pricing-tier {
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.pricing-tier h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  color: #fff;
+}
+
+.pricing-tier .price {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.pricing-tier .period {
+  font-size: 0.875rem;
+  color: #737373;
+  margin-top: 0.25rem;
+}

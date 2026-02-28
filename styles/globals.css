@@ -31,7 +31,44 @@ h1 {
 .subtitle {
   font-size: 1.125rem;
   color: #a3a3a3;
-  margin: 0 0 3rem;
+  margin: 0 0 1rem;
+}
+
+.tagline {
+  font-size: 1rem;
+  color: #737373;
+  margin: 0 0 2rem;
+  max-width: 32ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #2a2a2a;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  border: 1px solid #3a3a3a;
+}
+
+.cta:hover {
+  background-color: #333;
+}
+
+.nav {
+  margin-bottom: 2rem;
+}
+
+.nav a {
+  color: #a3a3a3;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: #fff;
 }
 
 .pricing-section {

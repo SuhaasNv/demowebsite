@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import fs from "fs";
+import { Redis } from "@upstash/redis";
 
 export type PricingData = {
   starter: number;
@@ -8,20 +9,30 @@ export type PricingData = {
   enterprise: number;
 };
 
-const getDataPath = () => path.join(process.cwd(), "data", "pricing.json");
+const DEFAULT_PRICING: PricingData = {
+  starter: 59,
+  pro: 99,
+  enterprise: 159,
+};
 
-function readPricing(): PricingData {
-  const filePath = getDataPath();
+const PRICING_KEY = "pricing";
+
+function getJsonPath() {
+  return path.join(process.cwd(), "data", "pricing.json");
+}
+
+function readFromFile(): PricingData {
+  const filePath = getJsonPath();
   try {
     const data = fs.readFileSync(filePath, "utf-8");
     return JSON.parse(data);
   } catch {
-    return { starter: 59, pro: 99, enterprise: 159 };
+    return DEFAULT_PRICING;
   }
 }
 
-function writePricing(data: PricingData): void {
-  const filePath = getDataPath();
+function writeToFile(data: PricingData): void {
+  const filePath = getJsonPath();
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -29,9 +40,30 @@ function writePricing(data: PricingData): void {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+async function getPricing(): Promise<PricingData> {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = Redis.fromEnv();
+    const data = await redis.get<PricingData>(PRICING_KEY);
+    return data ?? DEFAULT_PRICING;
+  }
+  return readFromFile();
+}
+
+async function setPricing(data: PricingData): Promise<void> {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = Redis.fromEnv();
+    await redis.set(PRICING_KEY, data);
+  } else {
+    writeToFile(data);
+  }
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "GET") {
-    const pricing = readPricing();
+    const pricing = await getPricing();
     return res.status(200).json(pricing);
   }
 
@@ -45,7 +77,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const pricing: PricingData = { starter, pro, enterprise };
-    writePricing(pricing);
+    await setPricing(pricing);
     return res.status(200).json(pricing);
   }
 

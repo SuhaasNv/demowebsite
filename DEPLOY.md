@@ -29,9 +29,6 @@ Follow the prompts. If you linked Redis in step 1, env vars are already set.
 For local dev, pricing uses the `data/pricing.json` file (no Redis needed).
 
 To use Redis locally:
-1. Copy env vars from Vercel: **Project → Settings → Environment Variables**
-2. Create `.env.local` with:
-   ```
-   UPSTASH_REDIS_REST_URL=your_url
-   UPSTASH_REDIS_REST_TOKEN=your_token
-   ```
+1. Copy the snippet from the Upstash console (**.env.local** tab → Copy Snippet)
+2. Create `.env.local` in your project root with those variables
+3. The API supports both `KV_REST_API_*` and `UPSTASH_REDIS_REST_*` env var names

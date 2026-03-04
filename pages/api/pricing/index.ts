@@ -40,9 +40,20 @@ function writeToFile(data: PricingData): void {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 }
 
+function getRedis() {
+  const url =
+    process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (url && token) {
+    return new Redis({ url, token });
+  }
+  return null;
+}
+
 async function getPricing(): Promise<PricingData> {
-  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-    const redis = Redis.fromEnv();
+  const redis = getRedis();
+  if (redis) {
     const data = await redis.get<PricingData>(PRICING_KEY);
     return data ?? DEFAULT_PRICING;
   }
@@ -50,8 +61,8 @@ async function getPricing(): Promise<PricingData> {
 }
 
 async function setPricing(data: PricingData): Promise<void> {
-  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-    const redis = Redis.fromEnv();
+  const redis = getRedis();
+  if (redis) {
     await redis.set(PRICING_KEY, data);
   } else {
     writeToFile(data);

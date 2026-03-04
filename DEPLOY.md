@@ -1,34 +1,47 @@
 # Deploy to Vercel (with persistent pricing)
 
-## 1. Add Upstash Redis (for saving pricing)
+## 1. Connect to your project
 
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard) → your project
-2. Open **Storage** tab (or **Integrations**)
-3. Click **Create Database** or **Browse Marketplace**
-4. Choose **Upstash Redis** (or "Upstash KV")
-5. Create the database (free tier available)
-6. **Link** it to your project — Vercel will add the env vars automatically
+If you have an existing Vercel project, link it locally:
 
-## 2. Deploy
-
-**Option A: From GitHub**
-- Push your code to GitHub
-- Go to [vercel.com/new](https://vercel.com/new)
-- Import your repo
-- Deploy (env vars from Redis integration are added automatically)
-
-**Option B: From CLI**
 ```bash
-npm i -g vercel
+vercel link
+```
+
+If starting fresh, create a new project at [vercel.com/new](https://vercel.com/new) and import your repo.
+
+## 2. Add Upstash Redis
+
+1. In [Vercel Dashboard](https://vercel.com/dashboard) → your project
+2. Go to **Storage** (or **Integrations**)
+3. **Create Database** → choose **Upstash Redis** (or "Upstash KV")
+4. Create the database (free tier available)
+5. **Connect to a project** — link it to your project so Vercel adds env vars automatically
+
+## 3. Pull environment variables locally
+
+```bash
+vercel env pull .env.local
+```
+
+This pulls the latest env vars (including Redis credentials) for local development.
+
+## 4. Install the Upstash Redis SDK
+
+```bash
+npm install @upstash/redis
+```
+
+(Already in this project.)
+
+## 5. Deploy
+
+```bash
 vercel
 ```
-Follow the prompts. If you linked Redis in step 1, env vars are already set.
 
-## 3. Local development
+Or push to GitHub — Vercel will auto-deploy if the repo is connected.
 
-For local dev, pricing uses the `data/pricing.json` file (no Redis needed).
+---
 
-To use Redis locally:
-1. Copy the snippet from the Upstash console (**.env.local** tab → Copy Snippet)
-2. Create `.env.local` in your project root with those variables
-3. The API supports both `KV_REST_API_*` and `UPSTASH_REDIS_REST_*` env var names
+**Local dev without Redis:** The API falls back to `data/pricing.json` when Redis env vars are missing, so you can run `npm run dev` without setting up Redis.
